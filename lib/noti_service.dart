@@ -101,29 +101,34 @@ class NotiService {
       minute,
     );
 
+    // Schedule for tomorrow
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
     // Schedule the notification
     await notificationsPlugin.zonedSchedule(
       id,
       title,
       body,
       scheduledDate,
-      const NotificationDetails(),
+      notificationDetails(),
 
       // iOS specific: Use exact time specified (vs relative time)
-      //uiLocalNoficationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      // uiLocalNoficationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
 
       // Android
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
 
       // Make notification repeat DAILY at same time
       matchDateTimeComponents: DateTimeComponents.time,
     );
 
-    print("Notification Scheduled");
+    print("Notification Scheduled for: $scheduledDate");
   }
 
   // Cancel all notifications
-  Future<void> cancelAllNotifications() async {
+  /*Future<void> cancelAllNotifications() async {
     await notificationsPlugin.cancel(1);
-  }
+  }*/
 }
