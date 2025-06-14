@@ -25,8 +25,8 @@ class HomePage extends StatelessWidget {
                 NotiService().scheduleNotification(
                   title: "Title",
                   body: "Body",
-                  hour: 22, //  11pm
-                  minute: 32,
+                  hour: 00, //  11pm
+                  minute: 42,
                 );
               },
               child: const Text("Schedule Notif"),
