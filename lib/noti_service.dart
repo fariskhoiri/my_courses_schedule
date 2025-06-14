@@ -1,4 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotiService {
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -7,9 +10,14 @@ class NotiService {
 
   bool get isInitialized => _isInitialized;
 
-  // Init
+  // Initialize
   Future<void> initNotification() async {
     if (_isInitialized) return; // Prevent re-initialization
+
+    // Init timezone handling
+    tz.initializeTimeZones();
+    final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
     // Prepare andorid init settings
     const initSettingsAndorid = AndroidInitializationSettings(
@@ -66,5 +74,56 @@ class NotiService {
     return notificationsPlugin.show(id, title, body, notificationDetails());
   }
 
-  // On notif tap
+  /* 
+   Schedule a notification at specified time (e.g 11pm)
+
+   - hour (0-23)
+   - minute (0-59)
+  */
+
+  Future<void> scheduleNotification({
+    int id = 1,
+    required String title,
+    required String body,
+    required int hour,
+    required int minute,
+  }) async {
+    // Get the current date/time in device local timezone
+    final now = tz.TZDateTime.now(tz.local);
+
+    // Create a date/time for today at the specified hour/min
+    var scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+
+    // Schedule the notification
+    await notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledDate,
+      const NotificationDetails(),
+
+      // iOS specific: Use exact time specified (vs relative time)
+      //uiLocalNoficationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+
+      // Android
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+
+      // Make notification repeat DAILY at same time
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+
+    print("Notification Scheduled");
+  }
+
+  // Cancel all notifications
+  Future<void> cancelAllNotifications() async {
+    await notificationsPlugin.cancel(1);
+  }
 }

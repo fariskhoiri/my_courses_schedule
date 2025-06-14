@@ -8,11 +8,30 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            NotiService().showNotification(title: "Title", body: "Body");
-          },
-          child: const Text("Send Notification"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Button -> show notification now
+            ElevatedButton(
+              onPressed: () {
+                NotiService().showNotification(title: "Title", body: "Body");
+              },
+              child: const Text("Send Notification"),
+            ),
+
+            // Button -> schedule notification for later
+            ElevatedButton(
+              onPressed: () {
+                NotiService().scheduleNotification(
+                  title: "title",
+                  body: "body",
+                  hour: 15, //  11pm
+                  minute: 57,
+                );
+              },
+              child: const Text("Schedule Notif"),
+            ),
+          ],
         ),
       ),
     );
