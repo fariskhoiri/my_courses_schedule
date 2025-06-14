@@ -23,10 +23,10 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 NotiService().scheduleNotification(
-                  title: "title",
-                  body: "body",
-                  hour: 16, //  11pm
-                  minute: 40,
+                  title: "Title",
+                  body: "Body",
+                  hour: 22, //  11pm
+                  minute: 32,
                 );
               },
               child: const Text("Schedule Notif"),
