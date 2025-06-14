@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_courses_schedule2/noti_service.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class SchedulesPage extends StatelessWidget {
+  const SchedulesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class HomePage extends StatelessWidget {
                 NotiService().scheduleNotification(
                   title: "Title",
                   body: "Body",
-                  hour: 00, //  11pm
-                  minute: 42,
+                  hour: 3, //  11pm
+                  minute: 27,
                 );
               },
               child: const Text("Schedule Notif"),
