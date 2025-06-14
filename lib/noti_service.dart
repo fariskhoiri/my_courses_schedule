@@ -29,8 +29,18 @@ class NotiService {
       iOS: initSettingIOS,
     );
 
-    // Final, initialize the plugin
     await notificationsPlugin.initialize(initSettings);
+
+    final androidPlugin =
+        notificationsPlugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+    if (androidPlugin != null) {
+      await androidPlugin.requestNotificationsPermission();
+    }
+
+    _isInitialized = true;
   }
 
   // Notif detail setup
@@ -53,12 +63,7 @@ class NotiService {
     String? title,
     String? body,
   }) async {
-    return notificationsPlugin.show(
-      id,
-      title,
-      body,
-      const NotificationDetails(),
-    );
+    return notificationsPlugin.show(id, title, body, notificationDetails());
   }
 
   // On notif tap

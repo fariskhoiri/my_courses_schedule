@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:my_courses_schedule2/noti_service.dart';
 import 'home_page.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Init notifications
-  NotiService().initNotification();
+  await NotiService().initNotification();
 
   runApp(const MyApp());
 }
